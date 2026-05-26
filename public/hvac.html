@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart HVAC Subscriber</title>
+  <link rel="stylesheet" href="css/hvac-style.css">
+  <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>❄️ Smart HVAC System</h1>
+    </header>
+
+    <div class="content-grid">
+      <!-- GPS Data -->
+      <section class="card gps-section">
+        <h2>📍 Car Location</h2>
+        <div class="data-grid">
+          <div class="data-item">
+            <label>Latitude:</label>
+            <span id="latitude" class="value">--</span>
+          </div>
+          <div class="data-item">
+            <label>Longitude:</label>
+            <span id="longitude" class="value">--</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Distance -->
+      <section class="card distance-section">
+        <h2>📏 Distance from Home</h2>
+        <div class="distance-display">
+          <div class="distance-value" id="distance">--</div>
+          <div class="distance-unit">km</div>
+        </div>
+      </section>
+
+      <!-- Temperature -->
+      <section class="card temperature-section">
+        <h2>🌡️ Temperature</h2>
+        <div class="temp-display">
+          <div class="temp-value" id="temperature">--</div>
+          <div class="temp-unit">°C</div>
+        </div>
+      </section>
+
+      <!-- HVAC Status -->
+      <section class="card hvac-status-section">
+        <h2>⚡ HVAC Power</h2>
+        <div class="status-display" id="hvac-power">
+          <div class="status-icon">⚪</div>
+          <div class="status-text">OFF</div>
+        </div>
+      </section>
+
+      <!-- Cooling Status -->
+      <section class="card cooling-section">
+        <h2>❄️ Cooling</h2>
+        <div class="status-display" id="cooling-status">
+          <div class="status-icon">⚪</div>
+          <div class="status-text">OFF</div>
+        </div>
+      </section>
+
+      <!-- Heating Status -->
+      <section class="card heating-section">
+        <h2>🔥 Heating</h2>
+        <div class="status-display" id="heating-status">
+          <div class="status-icon">⚪</div>
+          <div class="status-text">OFF</div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script src="js/hvac-app.js"></script>
+</body>
+</html>
