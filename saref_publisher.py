@@ -1,31 +1,50 @@
-try:
-    import paho.mqtt.client as mqtt
-except ModuleNotFoundError:
-    print("Error: The 'paho-mqtt' package is not installed. Please install it using 'pip install paho-mqtt' and try again.")
-    exit(1)
-
-try:
-    from kafka import KafkaProducer
-except ModuleNotFoundError:
-    print("Error: The 'kafka-python' package is not installed. Please install it using 'pip install kafka-python' and try again.")
-    exit(1)
-
+import paho.mqtt.client as mqtt
+from kafka import KafkaProducer
 import json
 import time
 import threading
 import random
+import os
 from datetime import datetime
+from dotenv import load_dotenv
 
-# MQTT broker details
-MQTT_BROKER = "mqtt.iot-lab.utwente.nl"
-MQTT_PORT = 1883
-MQTT_TOPIC = "trackers/HTIT_51/#"
-MQTT_USERNAME = "HTIT_51"
-MQTT_PASSWORD = "cubG38j0Lraj"
+# Load environment variables from .env file
+load_dotenv()
+
+# MQTT broker details (from environment variables)
+MQTT_BROKER = os.getenv("MQTT_BROKER")
+MQTT_PORT = os.getenv("MQTT_PORT")
+MQTT_TOPIC = os.getenv("MQTT_TOPIC")
+MQTT_USERNAME = os.getenv("MQTT_USERNAME")
+MQTT_PASSWORD = os.getenv("MQTT_PASSWORD")
 
 # Kafka broker details
-KAFKA_BROKER = "localhost:9092"
-KAFKA_TOPIC = "trackers.HTIT_51.gps"
+KAFKA_BROKER = os.getenv("KAFKA_BROKER")
+KAFKA_TOPIC = os.getenv("KAFKA_TOPIC")
+
+missing_vars = []
+if not MQTT_BROKER:
+    missing_vars.append("MQTT_BROKER")
+if not MQTT_PORT:
+    missing_vars.append("MQTT_PORT")
+if not MQTT_TOPIC:
+    missing_vars.append("MQTT_TOPIC")
+if not MQTT_USERNAME:
+    missing_vars.append("MQTT_USERNAME")
+if not MQTT_PASSWORD:
+    missing_vars.append("MQTT_PASSWORD")
+
+if missing_vars:
+    print(f"\n Error: Missing environment variables: {', '.join(missing_vars)}")
+    print("\nCreate a .env file in the project root with the following variables:")
+    exit(1)
+
+# Convert MQTT_PORT to integer
+try:
+    MQTT_PORT = int(MQTT_PORT)
+except ValueError:
+    print(f"\nError: MQTT_PORT must be a number, got '{MQTT_PORT}'\n")
+    exit(1)
 
 # Global variable to store latest GPS data
 latest_gps_data = None
@@ -39,7 +58,7 @@ kafka_producer = KafkaProducer(
 
 def create_saref_message(gps_data, temperature):
     """
-    Create a JSON-LD message following ETSI SAREF Ontology v4 for smart home proximity detection
+    Create a JSON-LD message following ETSI SAREF Ontology 
     """
     timestamp = datetime.now().isoformat()
 
@@ -170,10 +189,10 @@ mqtt_client.connect(MQTT_BROKER, MQTT_PORT, 60)
 mqtt_thread = threading.Thread(target=mqtt_client.loop_forever, daemon=True)
 mqtt_thread.start()
 
-# Give MQTT time to connect
+# Publish frequency
 time.sleep(2)
 
-# Start publishing SAREF messages
+# Publish SAREF messages
 try:
     publish_saref_messages()
 except KeyboardInterrupt:

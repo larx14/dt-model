@@ -1,6 +1,5 @@
 ﻿node_modules/
 .env
-.env.example
 .DS_Store
 *.log
 __pycache__/
@@ -11,4 +10,4 @@ __pycache__/
 dist/
 build/
 *.egg-info/
-.env.example
+
