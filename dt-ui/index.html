@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Digital Twin Dashboard</title>
+  <script src="/socket.io/socket.io.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <h1>🏠 Digital Twin Live Dashboard</h1>
+
+  <div class="grid">
+
+    <div class="card" id="tv">
+      <h2>📺 TV</h2>
+      <p>Status: <span id="tv-status">--</span></p>
+    </div>
+
+    <div class="card" id="hvac">
+      <h2>❄️ HVAC</h2>
+      <p>Status: <span id="hvac-status">--</span></p>
+    </div>
+
+    <div class="card" id="bbq">
+      <h2>🍖 BBQ</h2>
+      <p>Status: <span id="bbq-status">--</span></p>
+
+  
+    </div>
+<section class="card">
+  <h2>🎮 Device Controls</h2>
+
+  <div class="control-grid">
+
+  
+
+<button onclick="sendCommand('tv', 'TurnOn')">TV On</button>
+<button onclick="sendCommand('tv', 'TurnOff')">TV Off</button>
+<button onclick="sendCommand('hvac', 'TURN_ON')">HVAC On</button>
+<button onclick="sendCommand('hvac', 'TURN_OFF')">HVAC off</button>
+<button onclick="sendCommand('bbq', 'TurnOn')">BBQ On</button>
+<button onclick="sendCommand('bbq', 'TurnOff')">BBQ Off</button>
+
+  </div>
+</section>
+  </div>
+
+<script src="/socket.io/socket.io.js"></script>
+  <script src="ui.js"></script> 
+</body>
+</html>

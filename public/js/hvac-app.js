@@ -1,7 +1,7 @@
 const socket = io();
 
 // Update HVAC state from server
-socket.on('hvac-state-update', (hvacState) => {
+socket.on('device-state-update', (hvacState) => {
   updateDisplay(hvacState);
 });
 
@@ -56,6 +56,39 @@ function updateDisplay(hvacState) {
     heatingStatus.classList.add('off');
     heatingStatus.querySelector('.status-icon').textContent = '⚪';
     heatingStatus.querySelector('.status-text').textContent = 'OFF';
+  }
+    // =========================
+  // TV STATUS
+  // =========================
+  const tvStatus = document.getElementById('tv-status');
+
+  if (hvacState.devices?.tv?.isPowerOn) {
+    tvStatus.classList.add('on');
+    tvStatus.classList.remove('off');
+    tvStatus.querySelector('.status-icon').textContent = '🟢';
+    tvStatus.querySelector('.status-text').textContent = 'ON';
+  } else {
+    tvStatus.classList.remove('on');
+    tvStatus.classList.add('off');
+    tvStatus.querySelector('.status-icon').textContent = '⚪';
+    tvStatus.querySelector('.status-text').textContent = 'OFF';
+  }
+
+  // =========================
+  // BBQ STATUS
+  // =========================
+  const bbqStatus = document.getElementById('bbq-status');
+
+  if (hvacState.devices?.barbecue?.isPowerOn) {
+    bbqStatus.classList.add('on');
+    bbqStatus.classList.remove('off');
+    bbqStatus.querySelector('.status-icon').textContent = '🟢';
+    bbqStatus.querySelector('.status-text').textContent = 'ON';
+  } else {
+    bbqStatus.classList.remove('on');
+    bbqStatus.classList.add('off');
+    bbqStatus.querySelector('.status-icon').textContent = '⚪';
+    bbqStatus.querySelector('.status-text').textContent = 'OFF';
   }
 }
 
