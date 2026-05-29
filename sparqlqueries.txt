@@ -1,0 +1,22 @@
+State history: 
+SELECT ?device ?state ?timestamp
+WHERE {
+  GRAPH <http://example.org/dt> {
+    ?device <http://example.org/hasState> ?state ;
+            <http://example.org/hasTimestamp> ?timestamp .
+  }
+}
+ORDER BY ?device ?timestamp
+
+
+Command history: 
+SELECT ?device ?command ?timestamp
+WHERE {
+  GRAPH <http://example.org/dt> {
+    ?entry <http://example.org/hasCommand> ?command ;
+           <http://example.org/hasTimestamp> ?timestamp .
+    BIND(REPLACE(STR(?entry), "http://example.org/", "") AS ?full)
+    BIND(STRBEFORE(?full, "/command/") AS ?device)
+  }
+}
+ORDER BY ?device ?timestamp

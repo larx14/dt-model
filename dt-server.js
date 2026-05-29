@@ -5,9 +5,9 @@ const { Server } = require('socket.io');
 const { Kafka } = require('kafkajs');
 const axios = require('axios');
 
-/* ----------------------
+/* 
    EXPRESS + SOCKET SETUP
------------------------ */
+ */
 
 const app = express();
 const server = http.createServer(app);
@@ -35,9 +35,10 @@ app.post('/api/command', async (req, res) => {
   }
 });
 
-/* ----------------------
+/* 
    KAFKA SETUP
------------------------ */
+
+   */
 
 const kafka = new Kafka({
   clientId: 'digital-twin',
@@ -56,9 +57,9 @@ const STATE_TOPICS = [
   'home.bbq.state'
 ];
 
-/* ----------------------
-   DIGITAL TWIN STATE
------------------------ */
+/* 
+   DIGITAL TWIN STATE, DT needs to know and display the states at all times
+*/
 
 const latestState = {
   tv: null,
@@ -72,9 +73,9 @@ const history = {
   bbq: []
 };
 
-/* ----------------------
+/* 
    GRAPHDB STORAGE
------------------------ */
+    */
 
 async function storeStateTriple(device, state, timestamp) {
   const rdf = `
@@ -110,10 +111,10 @@ INSERT DATA {
   );
 }
 
-/* ----------------------
+/* 
    SEND COMMAND (DT → PT)
-   Uses saref:hasCommandKind — must match what home-app.js reads
------------------------ */
+   Uses saref:hasCommandKind 
+*/
 
 async function sendCommand(device, command) {
   const topic = `home.${device}.command`;
@@ -124,7 +125,7 @@ async function sendCommand(device, command) {
     },
     "@type": "saref:Command",
     "saref:actsUpon": device,
-    "saref:hasCommandKind": command  // ← home-app reads this field
+    "saref:hasCommandKind": command  //  home-app reads this field
   };
 
   await producer.send({
@@ -142,9 +143,10 @@ async function sendCommand(device, command) {
   }
 }
 
-/* ----------------------
+/*
    STATE EXTRACTION
------------------------ */
+
+   */
 
 function extractState(payload) {
   // State messages from home-app look like:
@@ -152,9 +154,9 @@ function extractState(payload) {
   return payload?.["saref:hasState"]?.["@value"] || null;
 }
 
-/* ----------------------
+/* 
    KAFKA CONSUMER
------------------------ */
+ */
 
 async function start() {
   await producer.connect();
@@ -205,9 +207,9 @@ async function start() {
   });
 }
 
-/* ----------------------
+/* 
    START SERVER
------------------------ */
+ */
 
 io.on('connection', (socket) => {
   // Send current state immediately to the newly connected client

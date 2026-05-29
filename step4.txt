@@ -1,0 +1,26 @@
+Step 4: Final Reflection
+4.1 Digital Shadow vs Digital Twin: What is the main practical difference between them in your system? 
+In our system, the digital shadow only subscribed to state topics. The digital shadow, therefore, monitored the physical devices and mirrored their behavior. It became a digital twin, once the command topics and api-endpoints were added, and the digital twin could actually influence the physical systems. The practical difference between a digital shadow and a digital twin is control. A shadow can only observe and mirror and a twin can act and influence physical behavior. 
+
+4.2 Role of the Broker: How does pub/sub enable decoupling and extensibility? 
+Kafka decouples the physical devices (home-app.js) from the digital twin (dt-server.js) entirely. Neither twin knows that the other one exists, they only know the same topic names. Thus, new subscribers can be added without changing code. The new subscriber must just subscribe to the same topics. Another advantage of the decoupling is that if one component (dt-server.js or home-app.js) crashes, the other one is not affected 
+
+4.3 Digital Thread: Which artefacts from your previous assignment were reused? How would this help in a real system?
+The following artefacts from the previous assignment were reused: 
+Kafka broker & topic structure 
+SAREF-based messages and their parsing in code 
+Distance calculation 
+GraphDB repository 
+Threshold-based device logic 
+
+In a real system this matters because it demonstrates a consistent digital thread. And therefore a traceable, unbroken link of data and semantics across system versions. Because the message format stayed the same (SAREF/JSON-LD), historical GPS data stored from the previous assignment remains valid and queryable alongside new DT data, with no migration needed. In an industrial setting this means a sensor installed today producing SAREF messages will be interpretable by systems built years later, reducing integration costs and preserving the meaning of historical data over time. 
+4.4 Design Trade-offs: Would you change your broker setup? Why? 
+The current setup uses a single shared Kafka broker for both sensor data (SAREF messages) and device commands (home.#.state & home.#.command). While this keeps the architecture simple, it also introduces dependency. For example, a compromised command topic could affect all devices. In a production system it would be better to separate the broker or use Kafka Authorization Control Lists (ACLs). ACLs would help to restrict which clients can produce to command topics, so the physical devices cannot accidentally publish commands. This would introduce operational complexity but better security as well. 
+
+4.5 Digital Twin vs Traditional Control Systems 
+Traditional control systems would centrally poll sensors on a fixed schedule, apply hardcoded logic, and send commands through a proprietary, closed protocol. Our smart home digital twin differs from that in four key ways: 
+Messages use SAREF/ JSON-LD. This means that any system that understands the ontology can interpret them. 
+The digital twin does not poll any sensors or states, but the physical devices rather publish their own state changes autonomously 
+Saving every command and state as a knowledge graph gives the digital twin a full auditable history, which traditional control system lag 
+The digital twin is extensible by design due to the decoupling. No changes to existing code must be made when adding a new subscriber. When adding new sensors to a traditional system, usually changes to the central controller must follow. 
+
